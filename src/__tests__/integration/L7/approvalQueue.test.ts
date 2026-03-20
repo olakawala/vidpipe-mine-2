@@ -83,6 +83,7 @@ function makeQueueItem(overrides: Partial<Omit<QueueItem, 'metadata'>> & { metad
     postContent: 'Test post content #test',
     hasMedia: true,
     mediaPath: '/test/media.mp4',
+    thumbnailPath: null,
     folderPath: '/test/publish-queue/item-1',
     ...restOverrides,
   }
@@ -391,6 +392,44 @@ describe('enqueueApproval', () => {
 
       expect(result.failed).toBe(1)
       expect(result.results[0].error).toBe('Network timeout')
+    })
+  })
+
+  describe('thumbnail handling', () => {
+    it('passes thumbnail as string URL to createPost mediaItems', async () => {
+      mockGetItem.mockResolvedValue(makeQueueItem({ thumbnailPath: '/test/thumb.png', metadata: { thumbnailPath: '/test/thumb.png' } }))
+      mockFileExists.mockResolvedValue(true)
+      mockUploadMedia
+        .mockResolvedValueOnce({ url: 'https://cdn/media.mp4', type: 'video' })
+        .mockResolvedValueOnce({ url: 'https://cdn/thumb.png', type: 'image' })
+      mockCreatePost.mockResolvedValue({ _id: 'late-1' })
+
+      await enqueueApproval(['item-1'])
+
+      const createPostCall = mockCreatePost.mock.calls[0]?.[0]
+      if (createPostCall?.mediaItems?.[0]?.thumbnail) {
+        expect(typeof createPostCall.mediaItems[0].thumbnail).toBe('string')
+        expect(createPostCall.mediaItems[0].thumbnail).toBe('https://cdn/thumb.png')
+      }
+    })
+
+    it('sets instagramThumbnail in platformSpecificData for instagram', async () => {
+      mockGetItem.mockResolvedValue(makeQueueItem({
+        thumbnailPath: '/test/thumb.png',
+        metadata: { platform: 'instagram', thumbnailPath: '/test/thumb.png' },
+      }))
+      mockFileExists.mockResolvedValue(true)
+      mockUploadMedia
+        .mockResolvedValueOnce({ url: 'https://cdn/media.mp4', type: 'video' })
+        .mockResolvedValueOnce({ url: 'https://cdn/ig-thumb.png', type: 'image' })
+      mockCreatePost.mockResolvedValue({ _id: 'late-ig' })
+
+      await enqueueApproval(['item-1'])
+
+      const call = mockCreatePost.mock.calls[0]?.[0]
+      if (call?.platformSpecificData) {
+        expect(call.platformSpecificData.instagramThumbnail).toBe('https://cdn/ig-thumb.png')
+      }
     })
   })
 })
