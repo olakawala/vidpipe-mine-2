@@ -918,6 +918,37 @@ export interface ScheduleSlot {
   label?: string
 }
 
+// ── Late API Queue Types ──
+
+/** Late API queue slot definition */
+export interface LateQueueSlot {
+  /** Day of week: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat */
+  dayOfWeek: number
+  /** Time in HH:MM format (24-hour, in the queue's timezone) */
+  time: string
+}
+
+/** Late API queue definition */
+export interface LateQueue {
+  _id: string
+  profileId: string
+  name: string
+  timezone: string
+  slots: LateQueueSlot[]
+  active: boolean
+  isDefault: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+/** Maps a (platform, clipType) pair to a Late API queue */
+export interface QueueMapping {
+  queueId: string
+  queueName: string
+  platform: string
+  clipType: string
+}
+
 // ============================================================================
 // VIDEO FORMAT
 // ============================================================================
@@ -1141,3 +1172,38 @@ export interface GenerateAgendaOptions {
   /** Override the output file path for the agenda markdown */
   outputPath?: string
 }
+
+// ============================================================================
+// PIPELINE SPEC (re-exports from L0-pure/pipelineSpec)
+// ============================================================================
+
+export type {
+  ClipStrategy,
+  ToneStrategy,
+  DurationRange,
+  ClipConfig,
+  PartialClipConfig,
+  ProcessingConfig,
+  ClipsConfig,
+  ContentConfig,
+  PlatformConfig,
+  DistributionConfig,
+  PipelineSpec,
+  PartialPipelineSpec,
+  SkipFlags,
+  SpecValidationError,
+  PresetName,
+} from '../pipelineSpec/index.js'
+
+export {
+  isPresetName,
+  PRESET_FULL,
+  PRESET_CLEAN,
+  PRESET_MINIMAL,
+  PRESETS,
+  getPreset,
+  validateSpec,
+  mergeWithDefaults,
+  applySkipFlags,
+  resolveFromFlags,
+} from '../pipelineSpec/index.js'
