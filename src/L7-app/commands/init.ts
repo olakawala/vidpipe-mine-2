@@ -74,9 +74,21 @@ export async function runInit(): Promise<void> {
 
   // Step 3: LLM Provider
   console.log('\nStep 3/5: LLM Provider')
-  const provider = await ask('  ? Provider [copilot/openai/claude] (copilot): ')
-  envVars.LLM_PROVIDER = provider.trim() || 'copilot'
+  const provider = await ask('  ? Provider [gemini/openrouter/copilot/openai/claude] (gemini): ')
+  envVars.LLM_PROVIDER = provider.trim() || 'gemini'
   console.log(`  ✅ Using ${envVars.LLM_PROVIDER}`)
+
+  // If gemini, ask for GEMINI_API_KEY
+  if (envVars.LLM_PROVIDER === 'gemini' || !envVars.LLM_PROVIDER) {
+    const geminiKey = await ask('  ? Gemini API key (press Enter to skip): ')
+    if (geminiKey.trim()) envVars.GEMINI_API_KEY = geminiKey.trim()
+  }
+
+  // If openrouter, ask for OPENROUTER_API_KEY
+  if (envVars.LLM_PROVIDER === 'openrouter') {
+    const openrouterKey = await ask('  ? OpenRouter API key: ')
+    if (openrouterKey.trim()) envVars.OPENROUTER_API_KEY = openrouterKey.trim()
+  }
 
   // If claude, ask for ANTHROPIC_API_KEY
   if (envVars.LLM_PROVIDER === 'claude') {

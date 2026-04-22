@@ -41,7 +41,7 @@ const defaultKeys = [
   'scheduleConfig',
 ] as const satisfies readonly DefaultKey[]
 
-const allowedProviders = ['copilot', 'openai', 'claude'] as const
+const allowedProviders = ['gemini', 'openrouter', 'copilot', 'openai', 'claude'] as const
 
 export const KEY_MAP = {
   'openai-key': { section: 'credentials', key: 'openaiApiKey' },
