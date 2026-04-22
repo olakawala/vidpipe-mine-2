@@ -173,8 +173,29 @@ export function resolveConfig(cliOptions: Partial<CLIOptions> = {}): AppEnvironm
       cliOptions.geminiModel,
       process.env.GEMINI_MODEL,
       globalConfig.defaults.geminiModel,
-      'gemini-2.5-pro',
+      'gemini-2.5-flash',
     ),
+    GEMINI_API_KEYS: resolveApiKeys(process.env.GEMINI_API_KEYS),
+    OPENROUTER_API_KEY: resolveString(
+      cliOptions.openrouterKey,
+      process.env.OPENROUTER_API_KEY,
+    ),
+    OPENROUTER_API_KEYS: resolveApiKeys(process.env.OPENROUTER_API_KEYS),
+    OPENROUTER_MODEL: resolveString(
+      cliOptions.openrouterModel,
+      process.env.OPENROUTER_MODEL,
+      'nvidia/nemotron-3-super-120b-a12b:free',
+    ),
+    ASSEMBLYAI_API_KEY: resolveString(
+      cliOptions.assemblyaiKey,
+      process.env.ASSEMBLYAI_API_KEY,
+    ),
+    ASSEMBLYAI_API_KEYS: resolveApiKeys(process.env.ASSEMBLYAI_API_KEYS),
+    TRANSCRIPTION_PROVIDER: resolveString(
+      cliOptions.transcriptionProvider,
+      process.env.TRANSCRIPTION_PROVIDER,
+      'whisper',
+    ) as 'whisper' | 'assemblyai',
     IDEAS_REPO: resolveString(
       cliOptions.ideasRepo,
       process.env.IDEAS_REPO,
@@ -199,4 +220,10 @@ function resolveModelOverrides(): Readonly<Record<string, string>> {
     }
   }
   return overrides
+}
+
+/** Parse comma-separated API keys from environment variable */
+function resolveApiKeys(envValue: string | undefined): string[] {
+  if (!envValue) return []
+  return envValue.split(',').map(k => k.trim()).filter(k => k.length > 0)
 }

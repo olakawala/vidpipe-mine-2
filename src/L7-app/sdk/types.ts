@@ -36,9 +36,11 @@ export interface VidPipeConfig {
   lateProfileId?: string
   githubToken?: string
   geminiApiKey?: string
+  openrouterApiKey?: string
+  assemblyaiApiKey?: string
 
   // LLM Configuration
-  llmProvider?: 'copilot' | 'openai' | 'claude'
+  llmProvider?: 'copilot' | 'openai' | 'claude' | 'gemini' | 'openrouter'
   llmModel?: string
 
   // Paths

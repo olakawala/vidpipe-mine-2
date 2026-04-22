@@ -6,7 +6,7 @@
  */
 
 /** Supported LLM provider names */
-export type ProviderName = 'copilot' | 'openai' | 'claude'
+export type ProviderName = 'copilot' | 'openai' | 'claude' | 'gemini' | 'openrouter'
 
 /** Tool definition in JSON Schema format (compatible with all providers) */
 export interface ToolDefinition {

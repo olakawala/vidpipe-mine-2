@@ -195,7 +195,7 @@ export async function runDoctor(): Promise<void> {
   const providerName = normalizeProviderName(config.LLM_PROVIDER) as ProviderName
   const isDefault = !config.LLM_PROVIDER
   const providerLabel = isDefault ? `${providerName} (default)` : providerName
-  const validProviders: ProviderName[] = ['copilot', 'openai', 'claude']
+  const validProviders: ProviderName[] = ['copilot', 'openai', 'claude', 'gemini', 'openrouter']
 
   if (!validProviders.includes(providerName)) {
     console.log(`  ❌ Provider: ${providerLabel} — unknown provider`)
@@ -219,12 +219,30 @@ export async function runDoctor(): Promise<void> {
       console.log('  ❌ ANTHROPIC_API_KEY not set (required for claude provider)')
       results.push({ label: 'LLM Provider', ok: false, required: true, message: 'ANTHROPIC_API_KEY not set for Claude LLM' })
     }
+  } else if (providerName === 'gemini') {
+    console.log(`  ✅ Provider: ${providerLabel}`)
+    if (config.GEMINI_API_KEY) {
+      console.log('  ✅ GEMINI_API_KEY is set')
+    } else {
+      console.log('  ❌ GEMINI_API_KEY not set (required for gemini provider)')
+      results.push({ label: 'LLM Provider', ok: false, required: true, message: 'GEMINI_API_KEY not set for Gemini LLM' })
+    }
+  } else if (providerName === 'openrouter') {
+    console.log(`  ✅ Provider: ${providerLabel}`)
+    if (config.OPENROUTER_API_KEY) {
+      console.log('  ✅ OPENROUTER_API_KEY is set')
+    } else {
+      console.log('  ❌ OPENROUTER_API_KEY not set (required for openrouter provider)')
+      results.push({ label: 'LLM Provider', ok: false, required: true, message: 'OPENROUTER_API_KEY not set for OpenRouter LLM' })
+    }
   }
 
   const defaultModels: Record<ProviderName, string> = {
     copilot: 'Claude Opus 4.6',
     openai: 'gpt-4o',
     claude: 'claude-opus-4.6',
+    gemini: 'gemini-2.5-flash',
+    openrouter: 'anthropic/claude-sonnet-4-6',
   }
   if (validProviders.includes(providerName)) {
     const defaultModel = defaultModels[providerName]

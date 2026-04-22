@@ -37,11 +37,15 @@ export interface AppEnvironment {
   SKIP_SOCIAL_PUBLISH: boolean
   GEMINI_API_KEY: string
   GEMINI_MODEL: string
-  /** GitHub repository for idea tracking (format: owner/repo) */
+  GEMINI_API_KEYS: string[]
+  OPENROUTER_API_KEY: string
+  OPENROUTER_API_KEYS: string[]
+  OPENROUTER_MODEL: string
+  ASSEMBLYAI_API_KEY: string
+  ASSEMBLYAI_API_KEYS: string[]
+  TRANSCRIPTION_PROVIDER: 'whisper' | 'assemblyai'
   IDEAS_REPO: string
-  /** GitHub Personal Access Token with repo + project scopes */
   GITHUB_TOKEN: string
-  /** Per-agent model overrides from MODEL_* env vars (e.g. MODEL_SHORTS_AGENT=gpt-4o) */
   MODEL_OVERRIDES: Readonly<Record<string, string>>
 }
 
@@ -68,9 +72,13 @@ export interface CLIOptions {
   githubToken?: string
   anthropicKey?: string
   geminiKey?: string
+  geminiModel?: string
+  openrouterKey?: string
+  openrouterModel?: string
+  assemblyaiKey?: string
+  transcriptionProvider?: string
   llmProvider?: string
   llmModel?: string
-  geminiModel?: string
   repoRoot?: string
   ffmpegPath?: string
   ffprobePath?: string

@@ -198,7 +198,7 @@ function isKnownDefaultKey(key: string): key is DefaultKey {
 }
 
 function isKnownProvider(value: string): value is KnownProvider {
-  return value === 'copilot' || value === 'openai' || value === 'claude'
+  return value === 'copilot' || value === 'openai' || value === 'claude' || value === 'gemini' || value === 'openrouter'
 }
 
 function resolveConfigTarget(rawKey: string): ConfigKeyTarget | undefined {
